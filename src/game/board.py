@@ -26,6 +26,39 @@ class Board:
         board_copy = [row[:] for row in self._board]
         return Board(length=self.length, board=board_copy)
 
+    def to_compact_bytes(self) -> bytes:
+        result = bytearray()
+        result.append(self.length)
+
+        for row in self._board:
+            for cell in row:
+                result.append(cell if cell is not None else 0)
+
+        return bytes(result)
+
+    @classmethod
+    def from_compact_bytes(cls, data: bytes) -> 'Board':
+        length = data[0]
+        board = [[None for _ in range(length)] for _ in range(length)]
+
+        idx = 1
+        for i in range(length):
+            for j in range(length):
+                value = data[idx]
+                board[i][j] = value if value != 0 else None
+                idx += 1
+
+        return cls(length=length, board=board)
+
+    def save_compact(self, filepath: str) -> None:
+        with open(filepath, 'wb') as f:
+            f.write(self.to_compact_bytes())
+
+    @classmethod
+    def load_compact(cls, filepath: str) -> 'Board':
+        with open(filepath, 'rb') as f:
+            return cls.from_compact_bytes(f.read())
+
     @property
     def is_solved(self) -> bool:
         if not self.is_full:
@@ -119,11 +152,11 @@ class Board:
 
         for i, row in enumerate(self._board):
 
-            if i > 0 and i% self.chunk_size == 0:
+            if i > 0 and i % self.chunk_size == 0:
                 s += "-" * ((self.length * 2 + self.length // self.chunk_size - 1) + 1) + "\n"
 
             for j, cell in enumerate(row):
-                if j > 0 and j %self.chunk_size== 0:
+                if j > 0 and j % self.chunk_size == 0:
                     s += '| '
 
                 s += (str(cell) if cell is not None else '.') + ' '
