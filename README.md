@@ -24,7 +24,23 @@ Sudoku CLI game with user interactions based on Vim
 ═════════════════════════════════════
 ```
 
-## how to
+## Installation
+
+### Download Pre-built Binary (Recommended)
+
+Download the latest release for your platform from the [Releases page](../../releases):
+- **Linux** (x86_64): `vi-sudoku-linux-x86_64`
+- **macOS** (Intel/x86_64): `vi-sudoku-macos-x86_64`
+- **macOS** (Apple Silicon/ARM64): `vi-sudoku-macos-arm64`
+- **Windows** (x86_64): `vi-sudoku-windows-x86_64.exe`
+
+Make it executable (Linux/macOS):
+```sh
+chmod +x vi-sudoku-*
+./vi-sudoku-*
+```
+
+### Run from Source
 
 1. `git clone` this repo and `cd` into the folder
 
@@ -34,4 +50,30 @@ Sudoku CLI game with user interactions based on Vim
 
 ```sh
 uv run main.py
+```
+
+## Building from Source
+
+To build an executable binary:
+
+1. Install dependencies:
+```sh
+pip install pyinstaller
+```
+
+2. Build the binary:
+```sh
+pyinstaller vi-sudoku.spec --clean
+```
+
+The binary will be available in the `dist/` directory.
+
+## Releases
+
+Releases are automatically created when a new version tag is pushed. The CI/CD pipeline builds binaries for Linux, macOS, and Windows, and attaches them to the GitHub release.
+
+To create a new release:
+```sh
+git tag v0.1.0
+git push origin v0.1.0
 ```

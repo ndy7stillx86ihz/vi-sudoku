@@ -1,0 +1,95 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v0.1.0, v1.0.0, etc.
+  workflow_dispatch:  # Allow manual triggering
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: vi-sudoku
+            asset_name: vi-sudoku-linux-x86_64
+          - os: macos-13  # Intel-based macOS
+            artifact_name: vi-sudoku
+            asset_name: vi-sudoku-macos-x86_64
+          - os: macos-latest  # Apple Silicon (ARM64)
+            artifact_name: vi-sudoku
+            asset_name: vi-sudoku-macos-arm64
+          - os: windows-latest
+            artifact_name: vi-sudoku.exe
+            asset_name: vi-sudoku-windows-x86_64.exe
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller vi-sudoku.spec --clean
+
+      - name: Rename artifact (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          mv dist/${{ matrix.artifact_name }} dist/${{ matrix.asset_name }}
+
+      - name: Rename artifact (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          move dist\${{ matrix.artifact_name }} dist\${{ matrix.asset_name }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}
+          path: dist/${{ matrix.asset_name }}
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Display structure of downloaded files
+        run: ls -R artifacts
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/vi-sudoku-linux-x86_64/vi-sudoku-linux-x86_64
+            artifacts/vi-sudoku-macos-x86_64/vi-sudoku-macos-x86_64
+            artifacts/vi-sudoku-macos-arm64/vi-sudoku-macos-arm64
+            artifacts/vi-sudoku-windows-x86_64.exe/vi-sudoku-windows-x86_64.exe
+          draft: false
+          prerelease: false
+          generate_release_notes: true
