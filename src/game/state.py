@@ -57,8 +57,7 @@ class GameState:
         if current_value is None:
             return False
 
-        solution_value = self.solution.get_cell(row, col)
-        return current_value != solution_value
+        return len(self.get_conflicts(row, col)) > 0
 
     def get_conflicts(self, row: int, col: int) -> list[tuple[int, int]]:
         conflicts = []
@@ -101,7 +100,7 @@ class GameState:
 
         self.current.set_cell(row, col, value)
 
-        if value is not None and self.solution.get_cell(row, col) != value:
+        if value is not None and len(self.get_conflicts(row, col)) > 0:
             self.errors_count += 1
 
         return True
@@ -190,6 +189,9 @@ class GameState:
             for j in range(self.current.length):
                 if self.current.get_cell(i, j) != self.solution.get_cell(i, j):
                     return False
+
+        if not self.paused:
+            self.pause()
 
         return True
 

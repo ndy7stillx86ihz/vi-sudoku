@@ -11,8 +11,9 @@ def generate_puzzle(difficulty: Difficulty = Difficulty.MEDIUM) -> Board:
     board = Board()
     _generate_solved_board_random(board)
 
+# todo: hacerlo dinamico
     removal_targets = {
-        Difficulty.EASY: 35,
+        Difficulty.EASY: 34,
         Difficulty.MEDIUM: 45,
         Difficulty.HARD: 52,
         Difficulty.EXPERT: 58
@@ -44,7 +45,7 @@ def generate_puzzle_symmetric(difficulty: Difficulty = Difficulty.MEDIUM) -> Boa
     _generate_solved_board_random(board)
 
     removal_targets = {
-        Difficulty.EASY: 34,
+        Difficulty.EASY: 1,
         Difficulty.MEDIUM: 44,
         Difficulty.HARD: 52,
         Difficulty.EXPERT: 58
