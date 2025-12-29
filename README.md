@@ -29,9 +29,10 @@ Sudoku CLI game with user interactions based on Vim
 ### Download Pre-built Binary (Recommended)
 
 Download the latest release for your platform from the [Releases page](../../releases):
-- **Linux**: `vi-sudoku-linux-amd64`
-- **macOS**: `vi-sudoku-macos-amd64`
-- **Windows**: `vi-sudoku-windows-amd64.exe`
+- **Linux** (x86_64): `vi-sudoku-linux-x86_64`
+- **macOS** (Intel/x86_64): `vi-sudoku-macos-x86_64`
+- **macOS** (Apple Silicon/ARM64): `vi-sudoku-macos-arm64`
+- **Windows** (x86_64): `vi-sudoku-windows-x86_64.exe`
 
 Make it executable (Linux/macOS):
 ```sh

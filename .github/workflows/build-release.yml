@@ -18,13 +18,16 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: vi-sudoku
-            asset_name: vi-sudoku-linux-amd64
-          - os: macos-latest
+            asset_name: vi-sudoku-linux-x86_64
+          - os: macos-13  # Intel-based macOS
             artifact_name: vi-sudoku
-            asset_name: vi-sudoku-macos-amd64
+            asset_name: vi-sudoku-macos-x86_64
+          - os: macos-latest  # Apple Silicon (ARM64)
+            artifact_name: vi-sudoku
+            asset_name: vi-sudoku-macos-arm64
           - os: windows-latest
             artifact_name: vi-sudoku.exe
-            asset_name: vi-sudoku-windows-amd64.exe
+            asset_name: vi-sudoku-windows-x86_64.exe
 
     steps:
       - name: Checkout code
@@ -83,9 +86,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            artifacts/vi-sudoku-linux-amd64/vi-sudoku-linux-amd64
-            artifacts/vi-sudoku-macos-amd64/vi-sudoku-macos-amd64
-            artifacts/vi-sudoku-windows-amd64.exe/vi-sudoku-windows-amd64.exe
+            artifacts/vi-sudoku-linux-x86_64/vi-sudoku-linux-x86_64
+            artifacts/vi-sudoku-macos-x86_64/vi-sudoku-macos-x86_64
+            artifacts/vi-sudoku-macos-arm64/vi-sudoku-macos-arm64
+            artifacts/vi-sudoku-windows-x86_64.exe/vi-sudoku-windows-x86_64.exe
           draft: false
           prerelease: false
           generate_release_notes: true

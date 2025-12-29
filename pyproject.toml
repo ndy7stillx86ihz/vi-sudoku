@@ -5,9 +5,6 @@ description = "Sudoku CLI game with user interactions based on Vim"
 requires-python = ">=3.11"
 dependencies = []
 
-[project.scripts]
-vi-sudoku = "main:main"
-
 [build-system]
 requires = ["setuptools>=42.0.0"]
 build-backend = "setuptools.build_meta"
